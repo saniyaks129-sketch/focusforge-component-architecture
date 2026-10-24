@@ -6,75 +6,52 @@ import TaskFilterBar from '../components/dashboard/TaskFilterBar';
 import TaskList from '../components/dashboard/TaskList';
 import { initialTasks } from '../data/tasks';
 
-const DashboardPage = () => {
+export default function DashboardPage() {
   const [tasks, setTasks] = useState(initialTasks || []);
-  const [taskTitle, setTaskTitle] = useState('');
-  const [category, setCategory] = useState('Feature');
   const [filter, setFilter] = useState('all');
 
-  // Derived Values
-  const totalTasks = tasks.length;
-  const completedTasks = tasks.filter((t) => t.completed).length;
-  const pendingTasks = totalTasks - completedTasks;
-
-  const filteredTasks = tasks.filter((task) => {
-    if (filter === 'pending') return !task.completed;
-    if (filter === 'completed') return task.completed;
-    return true;
-  });
-
-  // State Handlers
-  const handleAddTask = () => {
-    const newTask = {
-      id: Date.now().toString(),
-      title: taskTitle.trim(),
-      category,
-      completed: false,
-    };
-    setTasks([newTask, ...tasks]);
-    setTaskTitle('');
+  const handleAddTask = (title) => {
+    const newTask = { id: Date.now(), title, completed: false };
+    setTasks((prev) => [newTask, ...prev]);
   };
 
   const handleToggleTask = (id) => {
-    setTasks(
-      tasks.map((task) =>
-        task.id === id ? { ...task, completed: !task.completed } : task
-      )
+    setTasks((prev) =>
+      prev.map((t) => (t.id === id ? { ...t, completed: !t.completed } : t))
     );
   };
 
   const handleDeleteTask = (id) => {
-    setTasks(tasks.filter((task) => task.id !== id));
+    setTasks((prev) => prev.filter((t) => t.id !== id));
   };
 
+  const filteredTasks = tasks.filter((task) => {
+    if (filter === 'active') return !task.completed;
+    if (filter === 'completed') return task.completed;
+    return true;
+  });
+
+  const totalTasks = tasks.length;
+  const completedTasks = tasks.filter((t) => t.completed).length;
+  const pendingTasks = totalTasks - completedTasks;
+
   return (
-    <div className="min-h-screen bg-slate-900 text-slate-100 p-6 md:p-12">
-      <div className="max-w-4xl mx-auto">
-        <DashboardHeader />
-        <StatsRow
-          totalTasks={totalTasks}
-          completedTasks={completedTasks}
-          pendingTasks={pendingTasks}
-        />
-        <AddTaskInput
-          taskTitle={taskTitle}
-          setTaskTitle={setTaskTitle}
-          category={category}
-          setCategory={setCategory}
-          onAddTask={handleAddTask}
-        />
-        <TaskFilterBar
-          currentFilter={filter}
-          onFilterChange={setFilter}
-        />
+    <div className="dashboard-container">
+      <DashboardHeader />
+      <StatsRow
+        totalTasks={totalTasks}
+        completedTasks={completedTasks}
+        pendingTasks={pendingTasks}
+      />
+      <section className="tasks-section">
+        <AddTaskInput onAddTask={handleAddTask} />
+        <TaskFilterBar currentFilter={filter} onFilterChange={setFilter} />
         <TaskList
           tasks={filteredTasks}
           onToggleTask={handleToggleTask}
           onDeleteTask={handleDeleteTask}
         />
-      </div>
+      </section>
     </div>
   );
-};
-
-export default DashboardPage;
+}
