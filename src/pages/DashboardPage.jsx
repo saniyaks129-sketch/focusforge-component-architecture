@@ -4,7 +4,7 @@ import StatsRow from '../components/dashboard/StatsRow';
 import AddTaskInput from '../components/dashboard/AddTaskInput';
 import TaskFilterBar from '../components/dashboard/TaskFilterBar';
 import TaskList from '../components/dashboard/TaskList';
-import { initialTasks } from '../data/tasks';
+import initialTasks from '../data/tasks';
 
 export default function DashboardPage() {
   const [tasks, setTasks] = useState(initialTasks || []);
