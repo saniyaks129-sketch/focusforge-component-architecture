@@ -1,7 +1,7 @@
 # Refactoring Documentation: FocusForge Dashboard
 
 ## Live Application
-[PASTE_YOUR_DEPLOYED_URL_HERE]
+[https://focusforge-component-architecture-iota.vercel.app/]
 
 ## Architectural Decisions & Component Responsibilities
 
